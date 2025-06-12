@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5glqvs7udq1v"]
+
+[ext_resource type="Script" uid="uid://b31phusmm15mu" path="res://scenes/main/imgui/imgui_debug.gd" id="1_hyk8p"]
+
+[node name="Main" type="Node"]
+
+[node name="ImguiDebug" type="Node" parent="."]
+script = ExtResource("1_hyk8p")

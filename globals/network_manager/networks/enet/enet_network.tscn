@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://hpqa5s5qql7c"]
+
+[ext_resource type="Script" uid="uid://riim511xjj1i" path="res://globals/network_manager/networks/enet/enet_network.gd" id="1_hv1da"]
+
+[node name="EnetNetwork" type="Node"]
+script = ExtResource("1_hv1da")

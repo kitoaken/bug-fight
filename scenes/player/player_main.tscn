@@ -1,0 +1,90 @@
+[gd_scene load_steps=15 format=3 uid="uid://oeqoeegpti88"]
+
+[ext_resource type="Script" uid="uid://2scysttaf2cn" path="res://scenes/player/player_main.gd" id="1_enew3"]
+[ext_resource type="Script" uid="uid://byrgwv2o7hstx" path="res://addons/netfox.extras/state-machine/rewindable-state-machine.gd" id="2_d5b8g"]
+[ext_resource type="Script" uid="uid://c8co7bng5miwu" path="res://scenes/player/player_input.gd" id="3_d5b8g"]
+[ext_resource type="Script" uid="uid://j46a6nhrxv2w" path="res://scenes/player/player_states/idle_state.gd" id="4_ny572"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="4_o2egm"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="5_h1rf4"]
+[ext_resource type="Texture2D" uid="uid://bvoyr880cx5qr" path="res://placeholder/borris/idle.png" id="7_h1rf4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_o2egm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7eklj"]
+atlas = ExtResource("7_h1rf4")
+region = Rect2(33, 0, 15, 22)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0qw1l"]
+atlas = ExtResource("7_h1rf4")
+region = Rect2(33, 23, 15, 22)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cc5lg"]
+atlas = ExtResource("7_h1rf4")
+region = Rect2(33, 46, 15, 22)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vghga"]
+atlas = ExtResource("7_h1rf4")
+region = Rect2(33, 69, 15, 22)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nwg1n"]
+atlas = ExtResource("7_h1rf4")
+region = Rect2(33, 92, 15, 22)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_unpk2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7eklj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0qw1l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cc5lg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vghga")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nwg1n")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[node name="PlayerMain" type="CharacterBody2D"]
+script = ExtResource("1_enew3")
+
+[node name="PlayerInput" type="Node" parent="."]
+script = ExtResource("3_d5b8g")
+
+[node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("4_o2egm")
+root = NodePath("..")
+state_properties = Array[String]([":transform", ":velocity", "RewindableStateMachine:state"])
+input_properties = Array[String](["PlayerInput:input_vector", "PlayerInput:jump_input", "PlayerInput:sprint_input"])
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("5_h1rf4")
+root = NodePath("..")
+metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="RewindableStateMachine" type="Node" parent="."]
+script = ExtResource("2_d5b8g")
+metadata/_custom_type_script = "uid://byrgwv2o7hstx"
+
+[node name="IdleState" type="Node" parent="RewindableStateMachine" node_paths=PackedStringArray("player_input", "player_main")]
+script = ExtResource("4_ny572")
+player_input = NodePath("../../PlayerInput")
+player_main = NodePath("../..")
+metadata/_custom_type_script = "uid://usyufdtn83hc"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_o2egm")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_unpk2")
+animation = &"idle"
+autoplay = "idle"
